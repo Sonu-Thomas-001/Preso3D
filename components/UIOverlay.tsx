@@ -7,6 +7,7 @@ interface UIOverlayProps {
   onNext: (e: React.MouseEvent) => void;
   onPrev: (e: React.MouseEvent) => void;
   onPresent: () => void;
+  onExit?: () => void;
 }
 
 const UIOverlay: React.FC<UIOverlayProps> = ({
@@ -15,6 +16,7 @@ const UIOverlay: React.FC<UIOverlayProps> = ({
   onNext,
   onPrev,
   onPresent,
+  onExit
 }) => {
   return (
     <>
@@ -26,6 +28,14 @@ const UIOverlay: React.FC<UIOverlayProps> = ({
         className="absolute top-6 left-0 right-0 flex justify-center z-50 pointer-events-none"
       >
         <div className="bg-white/90 backdrop-blur-md shadow-lg border border-white/50 rounded-full px-2 py-1.5 flex items-center gap-4 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
+          
+          {/* Home / Exit Button */}
+          {onExit && (
+             <button onClick={onExit} className="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-500 transition-colors border-r border-slate-100 mr-1" title="Back to Dashboard">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+             </button>
+          )}
+
           <button onClick={onPrev} className="w-8 h-8 rounded-full hover:bg-black/5 flex items-center justify-center text-gray-600 transition-colors">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
           </button>

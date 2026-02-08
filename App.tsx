@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Slide3DContainer from './components/Slide3DContainer';
 import UIOverlay from './components/UIOverlay';
+import LandingPage from './components/LandingPage';
 import { AnimatePresence } from 'framer-motion';
 
 // Import Slides
@@ -105,6 +106,7 @@ const SLIDES = [
 
 const App: React.FC = () => {
   // --- State ---
+  const [view, setView] = useState<'landing' | 'presentation'>('landing');
   const [slideIndex, setSlideIndex] = useState(0);
   const [isPresenting, setIsPresenting] = useState(false);
   const [animKey, setAnimKey] = useState(0); // Force re-render for transitions
@@ -146,8 +148,6 @@ const App: React.FC = () => {
       // Only apply scaling if presenting AND we are NOT on the first slide (index 0)
       if (isPresenting && slideIndex !== 0) {
         // Calculate scale based on a reference width of 1280px.
-        // We apply a boost (1.15x) to ensure text is large and readable on projectors/screens.
-        // Reduced from 1.35x to avoid content cutoff.
         const referenceWidth = 1280;
         const scale = (window.innerWidth / referenceWidth) * 1.10;
         // Clamp minimum scale to prevent it becoming too small
@@ -182,6 +182,8 @@ const App: React.FC = () => {
 
   // Handle Keyboard Navigation & Shortcuts
   useEffect(() => {
+    if (view !== 'presentation') return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) return;
 
@@ -210,7 +212,12 @@ const App: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [slideIndex, isPresenting, nextSlide, prevSlide]);
+  }, [slideIndex, isPresenting, nextSlide, prevSlide, view]);
+
+  // Render Landing Page
+  if (view === 'landing') {
+    return <LandingPage onOpenDeck={() => setView('presentation')} />;
+  }
 
   // Determine Current Slide Component
   const CurrentSlideComponent = SLIDES[slideIndex];
@@ -245,6 +252,7 @@ const App: React.FC = () => {
             onNext={(e) => { e.stopPropagation(); nextSlide(); }}
             onPrev={(e) => { e.stopPropagation(); prevSlide(); }}
             onPresent={togglePresentationMode}
+            onExit={() => setView('landing')}
           />
         )}
       </AnimatePresence>
