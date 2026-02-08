@@ -1,5 +1,6 @@
 import React from 'react';
 import SlideLayout from '../SlideLayout';
+import { motion } from 'framer-motion';
 
 interface Props {
   isPresenting: boolean;
@@ -8,23 +9,51 @@ interface Props {
 const ContinuousDeploymentSlide: React.FC<Props> = ({ isPresenting }) => {
   const HeaderTitle = (
     <div className="flex flex-col">
-        <span className="text-[#46c256] text-3xl font-bold">[DevOps Foundations]</span>
+        <span className="text-[#46c256] text-3xl font-bold tracking-tight">[DevOps Foundations]</span>
+        <span className="text-slate-500 text-xl font-medium mt-1">Delivery vs Deployment</span>
     </div>
   );
 
-  const StepBox = ({ text }: { text: string }) => (
-    <div className="bg-[#3b82f6] text-white text-[10px] sm:text-xs font-bold py-3 px-2 rounded shadow-md w-24 text-center z-10">
-      {text}
-    </div>
+  const PipelineNode = ({ text, color = "bg-blue-500", delay = 0, isManual = false }: any) => (
+    <motion.div 
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ delay, type: "spring", stiffness: 200 }}
+      className="relative flex flex-col items-center mx-2 z-10"
+    >
+        <div className={`
+            w-20 h-16 rounded-xl shadow-lg border-b-4 border-r-4 border-white/30 backdrop-blur-md
+            ${isManual ? 'bg-amber-500' : color} flex items-center justify-center text-center p-1
+            group hover:-translate-y-2 transition-transform duration-300
+        `}>
+            <span className="text-[10px] font-bold text-white leading-tight drop-shadow-sm">{text}</span>
+            
+            {/* Gloss */}
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/40 to-transparent pointer-events-none"></div>
+            
+            {/* Manual Indicator */}
+            {isManual && (
+                <div className="absolute -top-3 -right-3 w-6 h-6 bg-red-500 rounded-full border-2 border-white flex items-center justify-center shadow-sm z-20" title="Manual Approval">
+                    <span className="text-white text-[10px]">✋</span>
+                </div>
+            )}
+        </div>
+        {/* Reflection/Shadow */}
+        <div className="w-16 h-2 bg-black/20 blur-md rounded-full mt-2 group-hover:scale-75 transition-transform duration-300"></div>
+    </motion.div>
   );
 
-  const Arrow = ({ color = "text-[#46c256]", label }: { color?: string, label?: string }) => (
-    <div className="flex flex-col items-center justify-center -mx-1 z-0 relative">
-        {label && <span className="text-[8px] text-slate-500 absolute -top-4 w-20 text-center leading-tight">{label}</span>}
-        <svg className={`w-8 h-8 ${color}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
-    </div>
+  const Connector = ({ active = true, delay = 0 }: any) => (
+      <div className="relative w-8 h-2 bg-slate-200/50 rounded-full overflow-hidden self-center -mx-1">
+          {active && (
+              <motion.div 
+                className="absolute inset-0 bg-green-400"
+                initial={{ x: '-100%' }}
+                animate={{ x: '100%' }}
+                transition={{ repeat: Infinity, duration: 1.5, delay, ease: "linear" }}
+              />
+          )}
+      </div>
   );
 
   return (
@@ -34,38 +63,55 @@ const ContinuousDeploymentSlide: React.FC<Props> = ({ isPresenting }) => {
       id="16"
       isPresenting={isPresenting}
     >
-      <div className="flex flex-col h-full justify-center items-center gap-12 pt-4">
+      <div className="flex flex-col h-full justify-center items-center gap-12 perspective-1000">
         
-        {/* Top Flow: Continuous Delivery */}
-        <div className="flex flex-col items-center w-full">
-            <h3 className="text-sm font-bold text-slate-700 mb-2">Continuous Delivery</h3>
-            <div className="flex items-center justify-center gap-1">
-                <StepBox text="Dev" />
-                <Arrow />
-                <StepBox text="Application Test" />
-                <Arrow />
-                <StepBox text="Integration Test" />
-                <Arrow label="Automatic trigger" />
-                <StepBox text="Acceptance Test" />
-                <Arrow color="text-[#ef4444]" label="Manual trigger" />
-                <StepBox text="Production" />
+        {/* Continuous Delivery Flow */}
+        <div className="w-full bg-slate-50/50 rounded-2xl p-6 border border-slate-200 shadow-inner relative overflow-hidden group">
+            <div className="absolute top-0 left-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-br-lg z-20">
+                Continuous Delivery
             </div>
+            <div className="flex items-center justify-center pt-4">
+                <PipelineNode text="Dev" color="bg-indigo-500" delay={0.1} />
+                <Connector delay={0.2} />
+                <PipelineNode text="App Test" color="bg-blue-500" delay={0.3} />
+                <Connector delay={0.4} />
+                <PipelineNode text="Integration Test" color="bg-cyan-500" delay={0.5} />
+                <Connector delay={0.6} />
+                <PipelineNode text="Acceptance Test" color="bg-teal-500" delay={0.7} />
+                
+                {/* Manual Gate */}
+                <div className="flex flex-col items-center mx-2">
+                    <div className="text-[9px] font-bold text-red-500 mb-1 animate-pulse">Manual Trigger</div>
+                    <div className="w-8 h-1 bg-red-400"></div>
+                </div>
+
+                <PipelineNode text="Production" color="bg-emerald-600" delay={0.9} isManual={true} />
+            </div>
+            {/* Background Decor */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-50/0 via-blue-100/30 to-blue-50/0 transform skew-x-12 pointer-events-none"></div>
         </div>
 
-        {/* Bottom Flow: Continuous Deployment */}
-        <div className="flex flex-col items-center w-full">
-            <div className="flex items-center justify-center gap-1">
-                <StepBox text="Dev" />
-                <Arrow />
-                <StepBox text="Application Test" />
-                <Arrow />
-                <StepBox text="Integration Test" />
-                <Arrow />
-                <StepBox text="Acceptance Test" />
-                <Arrow label="Automatic trigger" />
-                <StepBox text="Production" />
+        {/* Continuous Deployment Flow */}
+        <div className="w-full bg-slate-50/50 rounded-2xl p-6 border border-slate-200 shadow-inner relative overflow-hidden">
+            <div className="absolute top-0 left-0 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-br-lg z-20">
+                Continuous Deployment
             </div>
-            <h3 className="text-sm font-bold text-slate-700 mt-2">Continuous Deployment</h3>
+            <div className="flex items-center justify-center pt-4">
+                 <PipelineNode text="Dev" color="bg-indigo-500" delay={1.1} />
+                <Connector delay={1.2} />
+                <PipelineNode text="App Test" color="bg-blue-500" delay={1.3} />
+                <Connector delay={1.4} />
+                <PipelineNode text="Integration Test" color="bg-cyan-500" delay={1.5} />
+                <Connector delay={1.6} />
+                <PipelineNode text="Acceptance Test" color="bg-teal-500" delay={1.7} />
+                <Connector delay={1.8} />
+                <PipelineNode text="Production" color="bg-emerald-600" delay={1.9} />
+            </div>
+            {/* Automated Banner */}
+            <div className="absolute bottom-2 right-4 text-[10px] font-bold text-green-600 uppercase tracking-widest flex items-center gap-2">
+                <span className="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
+                Fully Automated
+            </div>
         </div>
 
       </div>
