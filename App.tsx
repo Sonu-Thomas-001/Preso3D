@@ -140,6 +140,32 @@ const App: React.FC = () => {
 
   // --- Event Listeners ---
   
+  // Handle Font Scaling for Presentation Mode
+  useEffect(() => {
+    const handleResize = () => {
+      // Only apply scaling if presenting AND we are NOT on the first slide (index 0)
+      if (isPresenting && slideIndex !== 0) {
+        // Calculate scale based on a reference width of 1280px.
+        // We apply a boost (1.35x) to ensure text is large and readable on projectors/screens.
+        const referenceWidth = 1280;
+        const scale = (window.innerWidth / referenceWidth) * 1.35;
+        // Clamp minimum scale to prevent it becoming too small
+        const finalScale = Math.max(0.8, scale);
+        document.documentElement.style.fontSize = `${finalScale * 100}%`;
+      } else {
+        document.documentElement.style.fontSize = '';
+      }
+    };
+
+    handleResize(); // Initial call
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      document.documentElement.style.fontSize = '';
+    };
+  }, [isPresenting, slideIndex]);
+
   // Handle Fullscreen Change (User presses Esc)
   useEffect(() => {
     const handleFsChange = () => {
@@ -195,7 +221,7 @@ const App: React.FC = () => {
     >
       
       {/* 3D Scene */}
-      <div key={animKey} className={`w-full h-full transition-all duration-500 ease-in-out ${isPresenting ? 'cursor-none' : ''}`}>
+      <div key={animKey} className={`w-full h-full transition-all duration-500 ease-in-out`}>
         <Slide3DContainer isPresenting={isPresenting}>
           <CurrentSlideComponent isPresenting={isPresenting} />
         </Slide3DContainer>
@@ -203,10 +229,10 @@ const App: React.FC = () => {
 
       {/* Presentation Overlays (Black/White Screen) */}
       {isPresenting && isBlackScreen && (
-        <div className="absolute inset-0 bg-black z-[100] cursor-none" />
+        <div className="absolute inset-0 bg-black z-[100]" />
       )}
       {isPresenting && isWhiteScreen && (
-        <div className="absolute inset-0 bg-white z-[100] cursor-none" />
+        <div className="absolute inset-0 bg-white z-[100]" />
       )}
 
       {/* UI Controls */}

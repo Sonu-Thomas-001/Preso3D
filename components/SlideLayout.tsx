@@ -9,6 +9,9 @@ interface SlideLayoutProps {
   isPresenting?: boolean;
   children: React.ReactNode;
   noContentPadding?: boolean;
+  hideHeader?: boolean;
+  hideFooter?: boolean;
+  backgroundClass?: string;
 }
 
 const containerVariants: Variants = {
@@ -69,7 +72,10 @@ const SlideLayout: React.FC<SlideLayoutProps> = ({
   id, 
   isPresenting = false, 
   children,
-  noContentPadding = false
+  noContentPadding = false,
+  hideHeader = false,
+  hideFooter = false,
+  backgroundClass = 'bg-white'
 }) => {
   const titleColorClass = titleColor === 'blue' ? 'text-[#00529b]' : 'text-[#46c256]';
 
@@ -78,27 +84,29 @@ const SlideLayout: React.FC<SlideLayoutProps> = ({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className={`w-full h-full relative overflow-hidden flex flex-col bg-white ${
+      className={`w-full h-full relative overflow-hidden flex flex-col ${backgroundClass} ${
         isPresenting ? 'rounded-none shadow-none' : 'rounded-xl border border-gray-200 shadow-2xl'
       }`}
     >
       {/* --- Header --- */}
-      <div className="px-8 pt-6 pb-2 flex justify-between items-start shrink-0 z-20 bg-white">
-        <div className="flex flex-col">
-          <motion.div variants={itemVariants} className={`text-3xl font-bold tracking-tight ${titleColorClass}`}>
-            {title}
-          </motion.div>
-          {subtitle && (
-            <motion.div variants={itemVariants} className="text-lg text-slate-500 font-medium mt-1">
-              {subtitle}
+      {!hideHeader && (
+        <div className="px-8 pt-6 pb-2 flex justify-between items-start shrink-0 z-20 bg-transparent">
+          <div className="flex flex-col">
+            <motion.div variants={itemVariants} className={`text-3xl font-bold tracking-tight ${titleColorClass}`}>
+              {title}
             </motion.div>
-          )}
+            {subtitle && (
+              <motion.div variants={itemVariants} className="text-lg text-slate-500 font-medium mt-1">
+                {subtitle}
+              </motion.div>
+            )}
+          </div>
+          
+          <motion.div variants={itemVariants}>
+            <PresoLogo />
+          </motion.div>
         </div>
-        
-        <motion.div variants={itemVariants}>
-          <PresoLogo />
-        </motion.div>
-      </div>
+      )}
 
       {/* --- Content Area --- */}
       <div className={`flex-grow relative z-10 overflow-hidden flex flex-col ${noContentPadding ? '' : 'px-12 py-4'}`}>
@@ -108,19 +116,21 @@ const SlideLayout: React.FC<SlideLayoutProps> = ({
       </div>
 
       {/* --- Footer --- */}
-      <motion.div 
-          variants={itemVariants} 
-          className="h-8 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between px-6 text-slate-400 text-[10px] font-medium tracking-wide shrink-0 z-20 relative"
-      >
-          <div className="flex items-center gap-2">
-             <span>Powered by Preso3D</span>
-             <span className="text-slate-300 mx-1">|</span>
-             <span className="font-mono opacity-80">github.com/Sonu-Thomas-001/</span>
-          </div>
-          <div className="flex items-center gap-2">
-             {id && <span>Slide {id}</span>}
-          </div>
-      </motion.div>
+      {!hideFooter && (
+        <motion.div 
+            variants={itemVariants} 
+            className="h-8 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between px-6 text-[10px] font-medium tracking-wide shrink-0 z-20 relative"
+        >
+            <div className="flex items-center gap-2 text-indigo-600">
+               <span className="font-semibold">Powered by Preso3D</span>
+               <span className="text-indigo-400 mx-1">|</span>
+               <span className="font-mono text-indigo-600/80">github.com/Sonu-Thomas-001/</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-400">
+               {id && <span>Slide {id}</span>}
+            </div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
