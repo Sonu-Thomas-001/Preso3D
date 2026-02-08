@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Slide3DContainer from './components/Slide3DContainer';
 import UIOverlay from './components/UIOverlay';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 // Website Pages
 import WebsiteLayout from './components/WebsiteLayout';
@@ -114,6 +114,40 @@ const SLIDES = [
 type AppMode = 'website' | 'presentation';
 type WebsitePage = 'home' | 'features' | 'about' | 'docs' | 'roadmap';
 
+// Mobile Restriction Component
+const MobileRestriction: React.FC<{ onExit: () => void }> = ({ onExit }) => {
+  return (
+    <div className="fixed inset-0 z-[100] bg-[#0B0C10] flex flex-col items-center justify-center p-6 text-center">
+        <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="max-w-md w-full bg-[#15161A] border border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col items-center relative overflow-hidden"
+        >
+            {/* Background Glow */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-indigo-500/10 blur-3xl pointer-events-none"></div>
+
+            <div className="relative w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center mb-6 border border-indigo-500/20 text-indigo-400">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-3">Desktop Required</h2>
+            <p className="text-slate-400 mb-8 leading-relaxed text-sm">
+                The Preso3D demo features complex spatial animations designed for larger screens. Please open this demo on a <span className="text-white font-semibold">desktop</span> or <span className="text-white font-semibold">tablet</span> for the best experience.
+            </p>
+            <button 
+                onClick={onExit}
+                className="w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-slate-200 transition-colors shadow-lg"
+            >
+                Return to Website
+            </button>
+        </motion.div>
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   // --- State ---
   const [mode, setMode] = useState<AppMode>('website');
@@ -121,10 +155,21 @@ const App: React.FC = () => {
   const [slideIndex, setSlideIndex] = useState(0);
   const [isPresenting, setIsPresenting] = useState(false);
   const [animKey, setAnimKey] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   
   // Presentation Features State
   const [isBlackScreen, setIsBlackScreen] = useState(false);
   const [isWhiteScreen, setIsWhiteScreen] = useState(false);
+
+  // --- Mobile Detection ---
+  useEffect(() => {
+    const checkScreen = () => {
+        setIsMobile(window.innerWidth < 768);
+    };
+    checkScreen();
+    window.addEventListener('resize', checkScreen);
+    return () => window.removeEventListener('resize', checkScreen);
+  }, []);
 
   // --- Actions ---
   const nextSlide = useCallback(() => {
@@ -234,6 +279,12 @@ const App: React.FC = () => {
   }
 
   // --- Render Presentation Mode ---
+  
+  // Mobile Restriction Check
+  if (isMobile) {
+      return <MobileRestriction onExit={() => setMode('website')} />;
+  }
+
   const CurrentSlideComponent = SLIDES[slideIndex];
 
   return (
