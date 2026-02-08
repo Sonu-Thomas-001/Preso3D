@@ -1,5 +1,6 @@
 import React from 'react';
 import SlideLayout from '../SlideLayout';
+import { motion } from 'framer-motion';
 
 interface Props {
   isPresenting: boolean;
@@ -8,19 +9,27 @@ interface Props {
 const DevOpsEngineerRoleSlide: React.FC<Props> = ({ isPresenting }) => {
   const HeaderTitle = (
     <div className="flex flex-col">
-        <span className="text-[#46c256] text-3xl font-bold">[DevOps Foundations]</span>
+        <span className="text-[#46c256] text-3xl font-bold tracking-tight">[DevOps Foundations]</span>
+        <span className="text-slate-500 text-xl font-medium mt-1">DevOps Engineer Role</span>
     </div>
   );
 
-  // Helper for diagram items
-  const RoleItem = ({ icon, text, align = 'left' }: { icon: React.ReactNode, text: string, align?: 'left' | 'right' }) => (
-    <div className={`flex items-center gap-3 ${align === 'right' ? 'flex-row-reverse text-right' : 'text-left'}`}>
-        <div className="w-12 h-12 rounded-full border-2 border-[#4FC3F7] flex items-center justify-center text-[#4FC3F7] shrink-0">
-            {icon}
-        </div>
-        <p className="text-xs text-white max-w-[140px] leading-tight font-light">{text}</p>
-    </div>
-  );
+  const roles = [
+    { text: "Specifications & Docs", icon: "📝", color: "border-blue-400 bg-blue-50 text-blue-800" },
+    { text: "Infrastructure Mgmt", icon: "🏗️", color: "border-indigo-400 bg-indigo-50 text-indigo-800" },
+    { text: "Performance Monitoring", icon: "📊", color: "border-green-400 bg-green-50 text-green-800" },
+    { text: "Cloud Deployment", icon: "☁️", color: "border-sky-400 bg-sky-50 text-sky-800" },
+    { text: "CI/CD Automation", icon: "⚙️", color: "border-purple-400 bg-purple-50 text-purple-800" },
+    { text: "DevOps Culture", icon: "🧠", color: "border-rose-400 bg-rose-50 text-rose-800" },
+  ];
+
+  // Using a viewbox coordinate system of 0-600 for the SVG
+  const center = 300;
+  const radius = 220; // Radius for the SVG lines end
+  
+  // Calculate radius in percentage relative to the container size
+  // 220 / 600 = 0.3666... => 36.6%
+  const radiusPercent = 36.6; 
 
   return (
     <SlideLayout 
@@ -29,57 +38,102 @@ const DevOpsEngineerRoleSlide: React.FC<Props> = ({ isPresenting }) => {
       id="10"
       isPresenting={isPresenting}
     >
-      <div className="w-full h-full flex items-center justify-center py-2">
-        <div className="bg-[#0D1B2A] rounded-xl p-8 w-full max-w-4xl relative shadow-2xl border border-slate-700">
-            {/* Card Title */}
-            <h3 className="text-center text-slate-300 text-lg mb-8 font-medium">DevOps Engineer Role</h3>
+      <div className="w-full h-full flex items-center justify-center relative perspective-1000 overflow-visible">
+        
+        {/* Main Container - Reduced size to prevent clipping on standard 1080p screens when scaled */}
+        <motion.div 
+            className="relative w-[28rem] h-[28rem] md:w-[32rem] md:h-[32rem] flex items-center justify-center"
+            initial={{ rotateX: 10, opacity: 0 }}
+            animate={{ rotateX: 0, opacity: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            style={{ transformStyle: 'preserve-3d' }}
+        >
+            {/* Background Radial Glow */}
+            <div className="absolute inset-0 rounded-full opacity-40 blur-3xl pointer-events-none" 
+                 style={{ background: 'radial-gradient(circle, rgba(74, 222, 128, 0.2) 0%, transparent 70%)', transform: 'translateZ(-40px)' }}></div>
 
-            <div className="grid grid-cols-3 gap-8 items-center">
+            {/* SVG Layer for Connecting Lines */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" viewBox="0 0 600 600" style={{ transform: 'translateZ(-10px)' }}>
+                {roles.map((_, i) => {
+                     const angle = (i * 2 * Math.PI) / roles.length - Math.PI / 2;
+                     const x = center + Math.cos(angle) * radius;
+                     const y = center + Math.sin(angle) * radius;
+                     return (
+                         <motion.line 
+                            key={i} 
+                            x1={center} y1={center} 
+                            x2={x} y2={y} 
+                            stroke="#cbd5e1" 
+                            strokeWidth="2" 
+                            strokeDasharray="6 6"
+                            initial={{ pathLength: 0, opacity: 0 }}
+                            animate={{ pathLength: 1, opacity: 1 }}
+                            transition={{ duration: 0.8, delay: 0.2 + (i * 0.1) }}
+                         />
+                     );
+                })}
+                {/* Outer Ring Dashed */}
+                 <circle cx={center} cy={center} r={radius} fill="none" stroke="#e2e8f0" strokeWidth="1" strokeDasharray="8 8" opacity="0.6" />
+            </svg>
+
+             {/* Center Hub */}
+             <motion.div 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", bounce: 0.4, duration: 0.8 }}
+                className="absolute z-20 w-[28%] h-[28%] bg-white rounded-full shadow-2xl border-4 border-white flex flex-col items-center justify-center"
+                style={{ transform: 'translateZ(30px)' }}
+             >
+                <div className="text-4xl md:text-5xl mb-1 z-10">👨‍💻</div>
+                <div className="text-[0.6rem] md:text-[0.7rem] font-black text-slate-800 uppercase tracking-widest z-10 text-center leading-tight mt-1">DevOps<br/>Engineer</div>
                 
-                {/* Left Column */}
-                <div className="flex flex-col gap-8">
-                    <RoleItem 
-                        icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>}
-                        text="Writing specifications and documentation"
-                        align="right"
-                    />
-                     <RoleItem 
-                        icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>}
-                        text="Infrastructure management"
-                        align="right"
-                    />
-                     <RoleItem 
-                        icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
-                        text="Performance assessment and monitoring"
-                        align="right"
-                    />
-                </div>
+                {/* Decorative Rings */}
+                <div className="absolute inset-0 rounded-full border border-slate-100"></div>
+                <div className="absolute -inset-2 border border-slate-200/50 rounded-full animate-pulse"></div>
+             </motion.div>
 
-                {/* Center Column - Avatar */}
-                <div className="flex flex-col items-center justify-center">
-                     <div className="w-24 h-24 bg-[#3B5B7D] rounded-full flex items-center justify-center mb-4 shadow-lg">
-                        <svg className="w-14 h-14 text-white" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>
-                     </div>
-                </div>
+             {/* Satellite Cards */}
+             {roles.map((role, i) => {
+                 const angle = (i * 2 * Math.PI) / roles.length - Math.PI / 2;
+                 // Calculate percentage offsets from center (50%, 50%)
+                 const top = 50 + Math.sin(angle) * radiusPercent;
+                 const left = 50 + Math.cos(angle) * radiusPercent;
 
-                {/* Right Column */}
-                <div className="flex flex-col gap-8">
-                    <RoleItem 
-                        icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>}
-                        text="Cloud deployment and management"
-                    />
-                    <RoleItem 
-                        icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>}
-                        text="CI/CD management and automation"
-                    />
-                    <RoleItem 
-                        icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>}
-                        text="Assistance with DevOps culture adoption"
-                    />
-                </div>
+                 return (
+                    <motion.div
+                        key={i}
+                        className="absolute z-30 flex items-center justify-center"
+                        style={{ 
+                            top: `${top}%`, 
+                            left: `${left}%`,
+                            transform: 'translateZ(20px)', 
+                        }}
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.4 + (i * 0.1), type: "spring", stiffness: 120 }}
+                    >
+                        {/* Inner Centering Wrapper */}
+                        <div className="transform -translate-x-1/2 -translate-y-1/2">
+                            <div className={`
+                                relative flex flex-col items-center justify-center 
+                                w-28 h-16 md:w-36 md:h-20 
+                                bg-white/95 backdrop-blur-md rounded-xl shadow-lg border-l-4 ${role.color}
+                                hover:scale-110 hover:shadow-2xl transition-all duration-300 cursor-pointer group 
+                            `}>
+                                 <div className="absolute -top-3 md:-top-4 w-6 h-6 md:w-8 md:h-8 rounded-full bg-white border border-slate-100 shadow-sm flex items-center justify-center text-sm md:text-lg group-hover:-translate-y-1 transition-transform z-10">
+                                    {role.icon}
+                                 </div>
+                                 <span className="text-[9px] md:text-[10px] font-bold text-slate-700 text-center leading-tight px-2 mt-2 group-hover:text-black transition-colors">
+                                    {role.text}
+                                 </span>
+                            </div>
+                        </div>
+                    </motion.div>
+                 );
+             })}
 
-            </div>
-        </div>
+        </motion.div>
+
       </div>
     </SlideLayout>
   );
