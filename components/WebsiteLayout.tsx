@@ -92,45 +92,100 @@ const WebsiteLayout: React.FC<WebsiteLayoutProps> = ({ children, currentPage, on
         </AnimatePresence>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-white/5 bg-[#050608] py-16 relative z-10">
-         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div className="col-span-1 md:col-span-2">
-                <div className="flex items-center gap-2 mb-4">
-                   <div className="w-6 h-6 bg-indigo-900/50 rounded flex items-center justify-center border border-indigo-500/30">
-                      <div className="w-2 h-2 bg-indigo-400 rounded-full"></div>
-                   </div>
-                   <span className="font-bold text-slate-200">Preso3D</span>
-                </div>
-                <p className="text-sm text-slate-500 max-w-sm leading-relaxed">
-                  The open-source presentation engine for developers. Built with React 19, Tailwind, and Framer Motion. 
-                  Designed for impact, performance, and depth.
-                </p>
-            </div>
-            
-            <div>
-               <h4 className="text-white font-bold mb-4 text-sm">Product</h4>
-               <ul className="space-y-2 text-sm text-slate-500">
-                  <li className="hover:text-indigo-400 cursor-pointer transition-colors" onClick={() => onNavigate('features')}>Features</li>
-                  <li className="hover:text-indigo-400 cursor-pointer transition-colors" onClick={() => onNavigate('roadmap')}>Roadmap</li>
-                  <li className="hover:text-indigo-400 cursor-pointer transition-colors" onClick={() => onNavigate('docs')}>Changelog</li>
-               </ul>
+      {/* Modern Cinematic Footer */}
+      <footer className="relative pt-24 pb-12 bg-[#030304] border-t border-white/5 overflow-hidden z-10">
+         {/* Top Glow Divider */}
+         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[1px] bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent"></div>
+         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-[1px] bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent blur-[2px]"></div>
+
+         <div className="max-w-7xl mx-auto px-6 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
+               
+               {/* Left: Brand & Vision */}
+               <div className="lg:col-span-4 flex flex-col items-start">
+                  <div 
+                    className="flex items-center gap-3 mb-6 cursor-pointer group" 
+                    onClick={() => onNavigate('home')}
+                  >
+                     <div className="w-8 h-8 flex items-center justify-center bg-gradient-to-br from-slate-800 to-black rounded-lg border border-white/10 shadow-lg group-hover:border-indigo-500/30 transition-colors">
+                        <div className="w-2.5 h-2.5 bg-indigo-500 rounded-full shadow-[0_0_12px_rgba(99,102,241,0.8)]"></div>
+                     </div>
+                     <span className="font-bold text-xl text-white tracking-tight">Preso<span className="text-indigo-400">3D</span></span>
+                  </div>
+                  
+                  <p className="text-slate-400 text-sm leading-relaxed max-w-xs mb-8 font-light">
+                     PowerPoint is for information.<br/>
+                     <span className="text-slate-100 font-medium">Preso3D is for impact.</span>
+                  </p>
+
+                  <div className="flex gap-4">
+                     {['twitter', 'github', 'linkedin'].map((icon, i) => (
+                        <a key={i} href="#" className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-all border border-white/5">
+                           <div className="w-4 h-4 bg-current opacity-80" style={{ maskImage: `url(https://simpleicons.org/icons/${icon}.svg)`, maskSize: 'contain', maskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskImage: `url(https://simpleicons.org/icons/${icon}.svg)`, WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }}></div>
+                        </a>
+                     ))}
+                  </div>
+               </div>
+
+               {/* Middle: Navigation Grid */}
+               <div className="lg:col-span-5 grid grid-cols-2 md:grid-cols-3 gap-8">
+                  <div>
+                     <h4 className="text-white font-bold text-sm mb-5 tracking-wide">Product</h4>
+                     <ul className="space-y-3 text-sm text-slate-500">
+                        {['Features', 'Demo', 'Roadmap', 'Themes'].map(item => (
+                           <li key={item} className="hover:text-cyan-400 cursor-pointer transition-colors" onClick={() => item === 'Roadmap' ? onNavigate('roadmap') : onNavigate('features')}>{item}</li>
+                        ))}
+                     </ul>
+                  </div>
+                  <div>
+                     <h4 className="text-white font-bold text-sm mb-5 tracking-wide">Developers</h4>
+                     <ul className="space-y-3 text-sm text-slate-500">
+                        {['Documentation', 'GitHub', 'API', 'Components'].map(item => (
+                           <li key={item} className="hover:text-cyan-400 cursor-pointer transition-colors" onClick={() => onNavigate('docs')}>{item}</li>
+                        ))}
+                     </ul>
+                  </div>
+                  <div>
+                     <h4 className="text-white font-bold text-sm mb-5 tracking-wide">Company</h4>
+                     <ul className="space-y-3 text-sm text-slate-500">
+                        {['About', 'Vision', 'License MIT'].map(item => (
+                           <li key={item} className="hover:text-cyan-400 cursor-pointer transition-colors" onClick={() => onNavigate('about')}>{item}</li>
+                        ))}
+                     </ul>
+                  </div>
+               </div>
+
+               {/* Right: Newsletter/CTA */}
+               <div className="lg:col-span-3">
+                  <h4 className="text-white font-bold text-sm mb-5 tracking-wide">Join the builders</h4>
+                  <div className="flex gap-2 mb-6">
+                     <input 
+                        type="email" 
+                        placeholder="Enter your email" 
+                        className="bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500/50 w-full transition-colors placeholder:text-slate-600" 
+                     />
+                     <button className="bg-indigo-600 hover:bg-indigo-500 text-white px-3 rounded-lg transition-colors flex items-center justify-center">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                     </button>
+                  </div>
+                  <div className="flex items-center gap-2.5 bg-white/5 w-fit px-3 py-1.5 rounded-full border border-white/5">
+                     <div className="relative flex h-2 w-2">
+                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                       <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                     </div>
+                     <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Systems Operational</span>
+                  </div>
+               </div>
             </div>
 
-            <div>
-               <h4 className="text-white font-bold mb-4 text-sm">Resources</h4>
-               <ul className="space-y-2 text-sm text-slate-500">
-                  <li className="hover:text-indigo-400 cursor-pointer transition-colors" onClick={() => onNavigate('docs')}>Documentation</li>
-                  <li><a href="#" className="hover:text-indigo-400 transition-colors">GitHub</a></li>
-                  <li><a href="#" className="hover:text-indigo-400 transition-colors">License (MIT)</a></li>
-               </ul>
-            </div>
-         </div>
-         <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-white/5 flex justify-between items-center text-xs text-slate-600">
-            <p>&copy; 2024 Preso3D Open Source.</p>
-            <div className="flex gap-2 items-center">
-               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-               <span>Systems Operational</span>
+            {/* Bottom Bar */}
+            <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600">
+               <p>&copy; 2024 Preso3D Inc. Open Source under MIT.</p>
+               <div className="flex gap-8">
+                  <a href="#" className="hover:text-slate-400 transition-colors">Privacy Policy</a>
+                  <a href="#" className="hover:text-slate-400 transition-colors">Terms of Service</a>
+                  <a href="#" className="hover:text-slate-400 transition-colors">Cookie Settings</a>
+               </div>
             </div>
          </div>
       </footer>
