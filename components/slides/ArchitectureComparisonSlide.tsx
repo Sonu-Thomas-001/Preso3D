@@ -29,7 +29,7 @@ const ArchitectureComparisonSlide: React.FC<Props> = ({ isPresenting }) => {
             initial={{ rotateY: 15 }}
             style={{ transformStyle: 'preserve-3d' }}
         >
-            <h3 className="text-center font-bold text-slate-700 mb-6 text-xl">Virtual Machines</h3>
+            <h3 className="text-center font-black text-slate-800 mb-6 text-xl drop-shadow-sm">Virtual Machines</h3>
             
             {/* Stack */}
             <div className="flex flex-col gap-1 w-full h-full justify-end">
@@ -37,43 +37,43 @@ const ArchitectureComparisonSlide: React.FC<Props> = ({ isPresenting }) => {
                 <div className="flex gap-2 justify-center mb-1">
                     {[1, 2, 3].map(i => (
                         <div key={i} className="flex flex-col w-24">
-                            <div className="bg-green-100 border border-green-300 p-2 text-[10px] font-bold text-center rounded-t">App {i}</div>
-                            <div className="bg-green-50 border border-green-200 p-2 text-[10px] text-center">Bins/Libs</div>
+                            <div className="bg-green-100 border border-green-300 p-2 text-[10px] font-black text-center rounded-t text-green-900">App {i}</div>
+                            <div className="bg-green-50 border border-green-200 p-2 text-[10px] text-center font-medium text-green-800">Bins/Libs</div>
                             {/* Guest OS - The Heavy Part */}
-                            <div className="bg-slate-300 border border-slate-400 p-3 text-[10px] font-bold text-center text-slate-700 shadow-inner">Guest OS</div>
+                            <div className="bg-slate-300 border border-slate-400 p-3 text-[10px] font-black text-center text-slate-900 shadow-inner">Guest OS</div>
                         </div>
                     ))}
                 </div>
 
                 {/* Hypervisor */}
-                <div className="w-full bg-slate-700 text-white p-3 text-center font-bold rounded shadow-lg transform translate-z-10">
+                <div className="w-full bg-slate-700 text-white p-3 text-center font-black text-sm rounded shadow-lg transform translate-z-10 uppercase tracking-widest">
                     Hypervisor
                 </div>
 
                 {/* Host OS */}
-                <div className="w-full bg-blue-600 text-white p-3 text-center font-bold rounded shadow-lg">
+                <div className="w-full bg-blue-600 text-white p-3 text-center font-black text-sm rounded shadow-lg uppercase tracking-wide">
                     Host Operating System
                 </div>
 
                 {/* Hardware */}
-                <div className="w-full bg-slate-900 text-slate-400 p-4 text-center font-bold rounded-b-xl shadow-2xl border-t border-slate-700">
+                <div className="w-full bg-slate-900 text-slate-200 p-4 text-center font-black text-sm rounded-b-xl shadow-2xl border-t border-slate-700 uppercase tracking-[0.2em]">
                     Server Hardware
                 </div>
             </div>
             
-            {/* "Heavy" Badge */}
+            {/* "Heavy" Badge - Repositioned to mirror Lightweight badge */}
             <motion.div 
-                className="absolute top-1/2 -left-4 bg-red-500 text-white px-2 py-1 rounded text-xs font-bold -rotate-12 shadow-lg"
-                animate={{ scale: [1, 1.1, 1] }}
+                className="absolute top-1/4 -left-6 bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-black -rotate-12 shadow-[0_10px_20px_rgba(220,38,38,0.3)] z-50 border border-red-400"
+                animate={{ scale: [1, 1.05, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
             >
-                Heavyweight
+                HEAVYWEIGHT
             </motion.div>
         </motion.div>
 
         {/* VS Divider */}
         <div className="h-full w-px bg-slate-200 relative">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-slate-200 rounded-full p-2 font-black text-slate-300 text-xl shadow-sm">VS</div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white border-4 border-slate-100 rounded-full p-3 font-black text-slate-400 text-2xl shadow-xl z-50">VS</div>
         </div>
 
         {/* RIGHT: DOCKER TOWER */}
@@ -82,46 +82,48 @@ const ArchitectureComparisonSlide: React.FC<Props> = ({ isPresenting }) => {
             initial={{ rotateY: -15 }}
             style={{ transformStyle: 'preserve-3d' }}
         >
-            <h3 className="text-center font-bold text-slate-700 mb-6 text-xl">Containers</h3>
+            <h3 className="text-center font-black text-slate-800 mb-6 text-xl drop-shadow-sm">Containers</h3>
             
             {/* Stack */}
             <div className="flex flex-col gap-1 w-full h-full justify-end">
                 {/* Apps Row - Floating higher due to no Guest OS */}
                 <div className="flex gap-4 justify-center mb-8 relative">
                      {/* Visual Gap to show lightweight nature */}
-                     <div className="absolute -bottom-6 w-full text-center text-[10px] text-slate-400 italic">No Guest OS Overhead</div>
+                     <div className="absolute -bottom-8 w-full text-center text-[11px] text-blue-600 font-black uppercase tracking-tighter bg-blue-50/50 py-1 rounded-full border border-blue-100/50">
+                        No Guest OS Overhead
+                     </div>
 
                     {[1, 2, 3].map(i => (
                         <div key={i} className="flex flex-col w-24 shadow-xl">
-                            <div className="bg-blue-100 border border-blue-300 p-2 text-[10px] font-bold text-center rounded-t">App {i}</div>
-                            <div className="bg-blue-50 border border-blue-200 p-2 text-[10px] text-center rounded-b">Bins/Libs</div>
+                            <div className="bg-blue-100 border border-blue-300 p-2 text-[10px] font-black text-center rounded-t text-blue-900">App {i}</div>
+                            <div className="bg-blue-50 border border-blue-200 p-2 text-[10px] text-center font-medium rounded-b text-blue-800">Bins/Libs</div>
                         </div>
                     ))}
                 </div>
 
                 {/* Docker Engine */}
-                <div className="w-full bg-blue-500 text-white p-3 text-center font-bold rounded shadow-lg flex items-center justify-center gap-2">
-                    <span>🐳</span> Docker Engine
+                <div className="w-full bg-blue-500 text-white p-3 text-center font-black text-sm rounded shadow-lg flex items-center justify-center gap-2 uppercase tracking-wide">
+                    <span className="text-lg">🐳</span> Docker Engine
                 </div>
 
                 {/* Host OS */}
-                <div className="w-full bg-blue-600 text-white p-3 text-center font-bold rounded shadow-lg">
+                <div className="w-full bg-blue-600 text-white p-3 text-center font-black text-sm rounded shadow-lg uppercase tracking-wide">
                     Host Operating System
                 </div>
 
                 {/* Hardware */}
-                <div className="w-full bg-slate-900 text-slate-400 p-4 text-center font-bold rounded-b-xl shadow-2xl border-t border-slate-700">
+                <div className="w-full bg-slate-900 text-slate-200 p-4 text-center font-black text-sm rounded-b-xl shadow-2xl border-t border-slate-700 uppercase tracking-[0.2em]">
                     Server Hardware
                 </div>
             </div>
 
             {/* "Light" Badge */}
             <motion.div 
-                className="absolute top-1/3 -right-4 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold rotate-12 shadow-lg"
-                 animate={{ scale: [1, 1.1, 1] }}
+                className="absolute top-1/3 -right-6 bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-black rotate-12 shadow-[0_10px_20px_rgba(5,150,105,0.3)] z-50 border border-emerald-400"
+                 animate={{ scale: [1, 1.05, 1] }}
                 transition={{ duration: 2, repeat: Infinity, delay: 1 }}
             >
-                Lightweight
+                LIGHTWEIGHT
             </motion.div>
         </motion.div>
 
